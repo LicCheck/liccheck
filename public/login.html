@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Вход — Панель модератора LicCheck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анимированный фон */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: #6c5ce7;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: #00b894;
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: #e84393;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Карточка входа */
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px rgba(108, 92, 231, 0.5));
+        }
+
+        .logo-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a8a8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-badge {
+            display: inline-block;
+            background: rgba(108, 92, 231, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #a8a8ff;
+            margin-left: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            font-size: 15px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            background: rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6c5ce7, #5a4ad7);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: rgba(232, 67, 147, 0.2);
+            border: 1px solid rgba(232, 67, 147, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #e84393;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .info-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 13px;
+            margin-top: 20px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #6c5ce7;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+            .logo-icon {
+                font-size: 36px;
+            }
+            .logo-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="login-card">
+        <div class="logo">
+            <div class="logo-icon">🔐</div>
+            <div>
+                <span class="logo-title">LicCheck</span>
+                <span class="logo-badge">MODERATOR</span>
+            </div>
+        </div>
+
+        <h1>Вход в панель управления</h1>
+        <div class="subtitle">Только для авторизованных модераторов</div>
+
+        <div class="input-group">
+            <label>👤 Логин</label>
+            <input type="text" id="username" placeholder="Введите логин" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label>🔒 Пароль</label>
+            <input type="password" id="password" placeholder="Введите пароль" autocomplete="off">
+        </div>
+
+        <button class="btn-login" id="loginBtn" onclick="handleLogin()">Войти в панель</button>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="info-text">
+            ⚡ Вход только для модераторов LicCheck
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/" class="back-link">← Вернуться на главную</a>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    
+    <script>
+        // Получаем элементы
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('errorMessage');
+
+        // Обработчик входа
+        async function handleLogin() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Очищаем предыдущую ошибку
+            errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
+            
+            // Валидация
+            if (!username) {
+                showError('Введите логин');
+                usernameInput.focus();
+                return;
+            }
+            
+            if (!password) {
+                showError('Введите пароль');
+                passwordInput.focus();
+                return;
+            }
+            
+            // Показываем состояние загрузки
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<span class="spinner"></span> Вход...';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Сохраняем токен
+                    localStorage.setItem('moderatorToken', data.token);
+                    localStorage.setItem('moderatorUsername', data.username);
+                    localStorage.setItem('moderatorRole', data.role);
+                    
+                    // Показываем уведомление об успехе
+                    showToast('Вход выполнен! Перенаправление...', 'success');
+                    
+                    // Перенаправляем в админ-панель
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 500);
+                } else {
+                    showError(data.error || 'Неверный логин или пароль');
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Ошибка соединения с сервером. Проверьте интернет.');
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // Показ ошибки
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            
+            // Встряхиваем карточку при ошибке
+            const card = document.querySelector('.login-card');
+            card.style.animation = 'none';
+            setTimeout(() => {
+                card.style.animation = 'slideUp 0.5s ease';
+            }, 10);
+        }
+        
+        // Показ уведомления (всплывающее)
+        function showToast(message, type) {
+            // Создаём временный тост
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#00b894' : '#e84393'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 40px;
+                font-size: 14px;
+                z-index: 1000;
+                animation: fadeInOut 2s ease;
+                font-family: 'Inter', sans-serif;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+        
+        // Добавляем стиль для анимации тоста
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Обработка нажатия Enter
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') passwordInput.focus();
+        });
+        
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+        
+        // Проверяем, если уже есть токен — редирект на админку
+        const existingToken = localStorage.getItem('moderatorToken');
+        if (existingToken) {
+            fetch('/api/auth/verify', {
+                headers: { 'Authorization': `Bearer ${existingToken}` }
+            })
+            .then(res => {
+                if (res.ok) {
+                    window.location.href = '/admin.html';
+                } else {
+                    localStorage.removeItem('moderatorToken');
+                }
+            })
+            .catch(() => {});
+        }
+    </script>
+</body>
+</html>
